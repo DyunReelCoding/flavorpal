@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.3.0/font/bootstrap-icons.css">
+    <link rel="stylesheet" href="/css/dashboard.css">
+</head>
+<body>
+
+<nav class="navbar navbar-expand-lg navbar-light">
+    <div class="container-fluid">
+        <a class="navbar-brand" href="#"><img src="/images/FlavorPal_logo.png" alt="Logo" width="85px"></a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav ml-auto">
+                <li class="nav-item">
+                    <a class="nav-link home-link fs-5" href="#" onclick="displayHome()">Home</a>
+                </li>
+                <li class="nav-item">
+                    <button class="nav-link logout-link fs-5" onclick="logout()">Logout</button>
+                </li>
+                <!-- <li class="nav-item">
+                    <a class="nav-link" href="profile.html">Profile</a>
+                </li> -->
+            </ul>
+        </div>
+    </div>
+</nav>
+
+<div class="container mt-5 pt-5">
+    <h2 id="welcomeMessage" class="text-center mb-3 fs-1 mt-5 text-white">Welcome to FlavorPal</h2>
+
+    <!-- Search Bar -->
+    <div class="input-group mb-3">
+        <input type="text" class="form-control" placeholder="Search for recipes..." id="searchInput">
+        <button class="btn btn-search" type="button" onclick="searchRecipes()">Search</button>
+    </div>
+
+    <!-- Recommendation Section -->
+    <div id="recommendations" class="row mt-4">
+        <!-- Recommendation Cards will be inserted here dynamically -->
+        <p class="text-white fs-3">Recommendation:</p>
+    </div>
+
+    <!-- Recipe Section -->
+    <div id="recipeSection" class="row mt-4">
+        <!-- Recipe Cards will be inserted here dynamically -->
+    </div>
+</div>
+
+
+<!-- Recipe Modal -->
+<div class="modal fade" id="recipeModal" tabindex="-1" aria-labelledby="recipeModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="recipeModalLabel"></h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body" id="recipeModalBody">
+                <!-- Recipe details will be inserted here dynamically -->
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-success" onclick="downloadRecipe()">
+                    <i class="bi bi-download"></i> 
+                </button>
+                <button type="button" class="btn btn-info" onclick="openConversionModal()">
+                    <i class="bi bi-arrow-repeat"></i>
+                </button>
+                <button type="button" class="btn btn-primary" onclick="openTimer()">
+                    <i class="bi bi-clock"></i>
+                </button>
+                <button type="button" class="btn btn-primary" onclick="startCooking()">Start Cooking</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<!-- Conversion Modal -->
+<div class="modal fade" id="conversionModal" tabindex="-1" aria-labelledby="conversionModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content ">
+            <div class="modal-header">
+                <h5 class="modal-title" id="conversionModalLabel">Ingredient Conversion</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <!-- Conversion form -->
+                <form id="conversionForm">
+                    <div class="mb-3">
+                        <label for="ingredientNameInput" class="form-label">Ingredient Name</label>
+                        <input type="text" class="form-control" id="ingredientNameInput" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="quantityInput" class="form-label">Quantity</label>
+                        <input type="number" class="form-control" id="quantityInput" step="any" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="unitInput" class="form-label">Measurement Unit</label>
+                        <!-- Modify the select options based on your measurement units -->
+                        <select class="form-select" id="unitInput" required>
+                            <option value="Grams">Grams</option>
+                            <option value="Kilograms">Kilograms</option>
+                            <option value="Liters">Liters</option>
+                            <option value="Teaspoons">Teaspoons</option>
+                            <option value="Tablespoons">Tablespoons</option>
+                            <option value="Cups">Cups</option>
+                            <option value="Fluid Ounces">Fluid Ounces</option>
+                            <option value="Milliliters">Milliliters</option>
+                            <option value="Pints">Pints</option>
+                        </select>
+                        
+                    </div>
+                    <div class="mb-3">
+                        <label for="recipeIdInput" class="form-label">Recipe ID</label>
+                        <input type="text" class="form-control" id="recipeIdInput" required>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Convert</button>
+                </form>
+
+                <!-- Display conversion result -->
+                <div id="conversionContent" class="mt-3"></div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-dark" data-bs-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<!-- Timer Modal -->
+<div class="modal fade" id="timerModal" tabindex="-1" aria-labelledby="timerModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="timerModalLabel">Cooking Timer</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <!-- Timer content will be inserted here dynamically -->
+                <div id="timerContent">
+                    <input type="number" id="timerInput" placeholder="Enter time in minutes">
+                    <button type="button" class="btn btn-primary" onclick="startTimer()">Start Timer</button>
+                    <button type="button" class="btn btn-warning" onclick="pauseTimer()">Pause</button>
+                    <button type="button" class="btn btn-danger" onclick="resetTimer()">Reset</button>
+                    <p>Status: <span id="timerStatus">Pending</span></p>
+                    <p>Time Remaining: <span id="timeRemaining"></span></p>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-dark" data-bs-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<footer class="mt-5 text-center">
+    <div class="container">
+        <!-- Rate Button -->
+        <button type="button" class="btn mx-auto my-3" onclick="showRateModal()">
+            Rate Us!
+        </button>
+    </div>
+</footer>
+
+<!-- Rate Modal -->
+<div class="modal fade" id="rateModal" tabindex="-1" role="dialog" aria-labelledby="rateModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="rateModalLabel">Rate Us!</h5>
+                <button type="button" class="close"onclick="closeRateModal()" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form id="contactForm">
+                    <div class="mb-3">
+                        <label for="subject">Name</label>
+                        <input type="text" class="form-control" id="sendername" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="subject">Subject</label>
+                        <input type="text" class="form-control" id="subject" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="user_id">User ID</label>
+                        <input type="text" class="form-control" id="user_id" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="recipe_id">Recipe ID</label>
+                        <input type="text" class="form-control" id="recipe_id" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="score">Score</label>
+                        <input type="number" class="form-control" id="score" min="1" max="5" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="review">Review</label>
+                        <textarea class="form-control" id="review" rows="3" required></textarea>
+                    </div>
+                    <div class="mb-3">
+                        <label for="email">Your Email</label>
+                        <input type="email" class="form-control" id="replyto" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="email">To</label>
+                        <input type="email" class="form-control" id="to" required value="iamkirito50@gmail.com">
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" onclick="closeRateModal()">Close</button>
+                <button type="button" class="btn btn-primary" onclick="sendEmail()">Send Email</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+<script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
+<script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/draggable/1.2.9/draggable.bundle.legacy.min.js"></script>
+<script src="https://raw.githack.com/eKoopmans/html2pdf/master/dist/html2pdf.bundle.js"></script>
+<script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.4.0/jspdf.umd.min.js"></script>
+<script src="https://unpkg.com/html2pdf.js"></script>
+<script src="https://smtpjs.com/v3/smtp.js"></script>
+
+<script src="js/sendEmail.js"></script>
+<!-- <script src="js/timer.js"></script> -->
+<!-- <script src="js/conversion.js"></script> -->
+<script src="js/timer_and_conversion.js"></script>
+<script src="js/index.js"></script>
+<script src="js/dashboard.js"></script>
+<script src="js/download.js"></script>
+<script src="js/session.js"></script>
+<script src="js/draggableModal.js"></script>
+</body>
+</html>

@@ -1,0 +1,54 @@
+body {
+    margin: 0;
+    background-image: url('/images/bg2.jpg');
+    background-position: center;
+    background-size: cover;
+    height: 90vh;
+    overflow: auto; /* Prevent scroll bars from appearing */
+    font-family: 'Nova Square', cursive;
+}
+
+.flavorpal-text {
+    color: #ee3625;
+    font-size: 120px;
+}
+
+.background-container {
+    position: relative;
+}
+
+.background-image {
+    width: 500px;
+    height: 500px;
+    position: absolute;
+    top: 500%;
+    left: 50%;
+    transform: translate(-50%, -50%); /* Center the image */
+    z-index: -1; /* Send the image to the background */
+    
+}
+
+.auth-container {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+.btn-register{
+    background-color: #ee3625;
+    color: white;
+}
+
+.btn-register:hover{
+    background-color: #fff;
+}
+
+.btn-login{
+    background-color: #000;
+    color: white;
+}
+
+.btn-login:hover{
+    background-color: #fff;
+}

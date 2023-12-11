@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User Profile</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css">
+</head>
+<body>
+
+<nav class="navbar navbar-expand-lg navbar-light bg-light">
+    <div class="container-fluid">
+        <a class="navbar-brand" href="#">User Profile</a>
+    </div>
+</nav>
+
+<div class="container mt-5">
+    <h2>User Profile</h2>
+
+    <!-- Display user data here -->
+    <div id="profileSection">
+        <!-- User profile data will be inserted here dynamically -->
+    </div>
+
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+<script src="js/profile.js"></script>
+<script>
+
+    // Function to fetch user data
+    async function fetchUserData() {
+        try {
+            // Fetch user data from the server
+            const response = await fetch("http://backendtest.test/api/get-user-data", {
+                method: "GET",
+                headers: {
+                    "Content-Type": "application/json",
+                    "Accept": "application/json",
+                    // Add any other headers if needed
+                },
+                credentials: "include", // Include cookies in the request
+            });
+
+            if (!response.ok) {
+                throw new Error(`HTTP error! Status: ${response.status}`);
+            }
+
+            const userData = await response.json();
+            displayUserData(userData);
+        } catch (error) {
+            console.error("Error fetching user data:", error);
+        }
+    }
+
+    // Function to display user data
+    function displayUserData(userData) {
+        const profileSection = document.getElementById("profileSection");
+
+        // Display user data on the page
+        const userDataHTML = `
+            <p><strong>Name:</strong> ${userData.name}</p>
+            <p><strong>Email:</strong> ${userData.email}</p>
+            <!-- Password is not displayed for security reasons -->
+        `;
+
+        profileSection.innerHTML = userDataHTML;
+    }
+
+    // Call the function to fetch user data
+    fetchUserData();
+
+</script>
+</body>
+</html>
