@@ -5,6 +5,7 @@ document.addEventListener('DOMContentLoaded', function () {
     makeModalDraggable('recipeModal');
     makeModalDraggable('conversionModal');
     makeModalDraggable('substitutionModal');
+    makeModalDraggable('nutritionModal');
 
 });
 
