@@ -195,7 +195,6 @@ function convertToDesiredUnit(quantity, originalUnit) {
         'Gallons': 0.000264172,
         'Quarts': 0.0000351951,
         'Ounces': 0.03527396,
-        // Add more conversion factors as needed
     };
 
     // Perform the conversion
@@ -206,10 +205,10 @@ function convertToDesiredUnit(quantity, originalUnit) {
 }
 
 // Function to display the conversion result in the modal
-function displayConversionResult(ingredientName, convertedQuantity) {
+function displayConversionResult(ingredientName, convertedQuantity, unit) {
     // Replace this with your logic to update the content in the conversion modal
     const conversionContent = document.getElementById('conversionContent');
-    conversionContent.innerHTML = `<p>Converted Quantity of ${ingredientName}: ${convertedQuantity} kg</p>`;
+    conversionContent.innerHTML = `<p>Converted Quantity of ${ingredientName}: ${convertedQuantity}  ${unit}</p>`;
 
     // Show the conversion modal
     openConversionModal();
@@ -228,7 +227,7 @@ function convertIngredient(event) {
     const convertedQuantity = convertToDesiredUnit(quantity, unit);
 
     // Display the conversion result in the modal
-    displayConversionResult(ingredientName, convertedQuantity);
+    displayConversionResult(ingredientName, convertedQuantity, unit);
 
     // Store the converted ingredient entry
     storeIngredientEntry(ingredientName, convertedQuantity, unit, recipeId);

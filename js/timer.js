@@ -4,14 +4,11 @@ let timer;
 let timerStatus = "Pending";
 let timeRemaining;
 let timerPaused = false;
-let cookingStarted = true;
 
 function openTimer() {
-    if (cookingStarted) {
-        $('#timerModal').modal('show');
-    } else {
-        alert("Click 'Start Cooking' to begin the cooking process.");
-    }
+        
+    $('#timerModal').modal('show');
+    
 }
 
 function startTimer() {

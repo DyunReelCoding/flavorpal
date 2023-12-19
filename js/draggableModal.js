@@ -4,6 +4,8 @@ document.addEventListener('DOMContentLoaded', function () {
     makeModalDraggable('timerModal');
     makeModalDraggable('recipeModal');
     makeModalDraggable('conversionModal');
+    makeModalDraggable('substitutionModal');
+
 });
 
 function makeModalDraggable(modalId) {

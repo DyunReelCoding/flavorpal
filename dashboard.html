@@ -7,33 +7,48 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.3.0/font/bootstrap-icons.css">
     <link rel="stylesheet" href="/css/dashboard.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" integrity="sha512-...">
+    
+
 </head>
 <body>
-
-<nav class="navbar navbar-expand-lg navbar-light">
-    <div class="container-fluid">
-        <a class="navbar-brand" href="#"><img src="/images/FlavorPal_logo.png" alt="Logo" width="85px"></a>
-        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-            <span class="navbar-toggler-icon"></span>
-        </button>
-        <div class="collapse navbar-collapse" id="navbarNav">
-            <ul class="navbar-nav ml-auto">
-                <li class="nav-item">
-                    <a class="nav-link home-link fs-5" href="#" onclick="displayHome()">Home</a>
-                </li>
-                <li class="nav-item">
-                    <button class="nav-link logout-link fs-5" onclick="logout()">Logout</button>
-                </li>
-                <!-- <li class="nav-item">
-                    <a class="nav-link" href="profile.html">Profile</a>
-                </li> -->
-            </ul>
+    <nav class="navbar navbar-expand-lg navbar-light">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="#"><img src="/images/FlavorPal_logo.png" alt="Logo" width="85px"></a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav">
+                    <li class="nav-item">
+                        <a class="nav-link home-link fs-5 text-white" href="#" onclick="displayHome()">Home</a>
+                    </li>
+                </ul>
+                <ul class="navbar-nav ms-auto">
+                    <!-- <li class="nav-item">
+                        <div class="btn-group mx-5">
+                            <button id="testButton" class="btn btn-primary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                User <span class="caret"></span>
+                            </button>
+                            <div class="dropdown-menu">
+                                <span id="navbarEmail" class="dropdown-item fontSize"></span>
+                            </div>
+                        </div>
+                    </li> -->
+                    <li class="nav-item">
+                        <button class="btn btn-link logout-link" onclick="logout()">
+                            <i class="fas fa-sign-out-alt"></i>
+                        </button>
+                    </li>
+                </ul>
+            </div>
         </div>
-    </div>
-</nav>
+    </nav>
+    
+    
 
 <div class="container mt-5 pt-5">
-    <h2 id="welcomeMessage" class="text-center mb-3 fs-1 mt-5 text-white">Welcome to FlavorPal</h2>
+    <h2 id="welcomeMessage" class="text-center mb-3 fs-1 mt-5 text-white">Welcome to Flavorpal</h2>
 
     <!-- Search Bar -->
     <div class="input-group mb-3">
@@ -41,17 +56,34 @@
         <button class="btn btn-search" type="button" onclick="searchRecipes()">Search</button>
     </div>
 
+    <div id="searchLoadingIndicator" class="text-center mt-4" style="display: none;">
+        <div class="spinner-border text-primary" role="status">
+            <span class="visually-hidden">Loading...</span>
+        </div>
+        <p class="mt-2 text-white">Searching recipes...</p>
+    </div>
+
     <!-- Recommendation Section -->
     <div id="recommendations" class="row mt-4">
         <!-- Recommendation Cards will be inserted here dynamically -->
-        <p class="text-white fs-3">Recommendation:</p>
+        <p class="text-white fs-3"><b>Recommendation:</b></p>
     </div>
+
+    <!-- Loading Indicator -->
+    <div id="loadingIndicator" class="text-center mt-4">
+    <div class="spinner-border text-primary" role="status">
+        <span class="visually-hidden">Loading...</span>
+    </div>
+
+    <p class="mt-2 text-white">Loading recipes...</p>
+</div>
 
     <!-- Recipe Section -->
     <div id="recipeSection" class="row mt-4">
         <!-- Recipe Cards will be inserted here dynamically -->
     </div>
 </div>
+
 
 
 <!-- Recipe Modal -->
@@ -69,9 +101,12 @@
                 <button type="button" class="btn btn-success" onclick="downloadRecipe()">
                     <i class="bi bi-download"></i> 
                 </button>
+                <button type="button" class="btn btn-warning" onclick="openSubstitutionModal()">
+                    <i class="fa-solid fa-dice"></i>
+                </button>
                 <button type="button" class="btn btn-info" onclick="openConversionModal()">
                     <i class="bi bi-arrow-repeat"></i>
-                </button>
+                </button> 
                 <button type="button" class="btn btn-primary" onclick="openTimer()">
                     <i class="bi bi-clock"></i>
                 </button>
@@ -81,54 +116,66 @@
     </div>
 </div>
 
-
-<!-- Conversion Modal -->
-<div class="modal fade" id="conversionModal" tabindex="-1" aria-labelledby="conversionModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content ">
+<!-- Cooking Conversion Modal -->
+<div class="modal fade" id="conversionModal" tabindex="-1" role="dialog" aria-labelledby="conversionModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="conversionModalLabel">Ingredient Conversion</h5>
+                <h5 class="modal-title" id="conversionModalLabel">Cooking Conversion</h5>
+            </div>
+            <div class="modal-body">
+                <!-- Form for user input -->
+                <form id="conversionForm">
+                    <div class="form-group">
+                        <label for="amount">Amount</label>
+                        <input type="number" class="form-control" id="amount" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="fromUnit">From Unit</label>
+                        <select class="form-control" id="fromUnit" required>
+                            <option value="teaspoons">Teaspoons</option>
+                            <option value="tablespoons">Tablespoons</option>
+                            <option value="cups">Cups</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="toUnit">To Unit</label>
+                        <select class="form-control" id="toUnit" required>
+                            <option value="teaspoons">Teaspoons</option>
+                            <option value="tablespoons">Tablespoons</option>
+                            <option value="cups">Cups</option>
+                        </select>
+                    </div>
+                    <button type="button" class="btn btn-primary my-3" onclick="submitConversion()">Convert</button>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-dark" data-bs-dismiss="modal">Close</button>
+                    </div>
+                </form>
+
+                <!-- Result Section -->
+                <div id="conversionResult" class="mt-3">
+                    <h5>Conversion Result:</h5>
+                    <p id="resultText"></p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="substitutionModal" tabindex="-1" aria-labelledby="substitutionModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="substitutionModalLabel">Ingredient Substitution</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                <!-- Conversion form -->
-                <form id="conversionForm">
-                    <div class="mb-3">
-                        <label for="ingredientNameInput" class="form-label">Ingredient Name</label>
-                        <input type="text" class="form-control" id="ingredientNameInput" required>
-                    </div>
-                    <div class="mb-3">
-                        <label for="quantityInput" class="form-label">Quantity</label>
-                        <input type="number" class="form-control" id="quantityInput" step="any" required>
-                    </div>
-                    <div class="mb-3">
-                        <label for="unitInput" class="form-label">Measurement Unit</label>
-                        <!-- Modify the select options based on your measurement units -->
-                        <select class="form-select" id="unitInput" required>
-                            <option value="Grams">Grams</option>
-                            <option value="Kilograms">Kilograms</option>
-                            <option value="Liters">Liters</option>
-                            <option value="Teaspoons">Teaspoons</option>
-                            <option value="Tablespoons">Tablespoons</option>
-                            <option value="Cups">Cups</option>
-                            <option value="Fluid Ounces">Fluid Ounces</option>
-                            <option value="Milliliters">Milliliters</option>
-                            <option value="Pints">Pints</option>
-                        </select>
-                        
-                    </div>
-                    <div class="mb-3">
-                        <label for="recipeIdInput" class="form-label">Recipe ID</label>
-                        <input type="text" class="form-control" id="recipeIdInput" required>
-                    </div>
-                    <button type="submit" class="btn btn-primary">Convert</button>
-                </form>
-
-                <!-- Display conversion result -->
-                <div id="conversionContent" class="mt-3"></div>
+                <label for="substitutionInput" class="form-label">Enter Ingredient:</label>
+                <input type="text" class="form-control" id="substitutionInput" placeholder="e.g., sugar">
+                <div id="substitutionResult"></div>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-dark" data-bs-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary" onclick="performSubstitution()">Submit</button>
             </div>
         </div>
     </div>
@@ -165,7 +212,7 @@
 <footer class="mt-5 text-center">
     <div class="container">
         <!-- Rate Button -->
-        <button type="button" class="btn mx-auto my-3" onclick="showRateModal()">
+        <button type="button" class="btn mx-auto my-5" onclick="showRateModal()">
             Rate Us!
         </button>
     </div>
@@ -191,17 +238,17 @@
                         <label for="subject">Subject</label>
                         <input type="text" class="form-control" id="subject" required>
                     </div>
-                    <div class="mb-3">
-                        <label for="user_id">User ID</label>
+                    <div class="mb-3" style="display: none">
+                        <label for="user_id" >User ID</label>
                         <input type="text" class="form-control" id="user_id" required>
                     </div>
-                    <div class="mb-3">
+                    <div class="mb-3" style="display: none">
                         <label for="recipe_id">Recipe ID</label>
                         <input type="text" class="form-control" id="recipe_id" required>
                     </div>
                     <div class="mb-3">
                         <label for="score">Score</label>
-                        <input type="number" class="form-control" id="score" min="1" max="5" required>
+                        <input type="number" class="form-control" id="score" placeholder="1-10" required>
                     </div>
                     <div class="mb-3">
                         <label for="review">Review</label>
@@ -211,10 +258,10 @@
                         <label for="email">Your Email</label>
                         <input type="email" class="form-control" id="replyto" required>
                     </div>
-                    <div class="mb-3">
-                        <label for="email">To</label>
-                        <input type="email" class="form-control" id="to" required value="iamkirito50@gmail.com">
-                    </div>
+                    <div class="mb-3" style="display: none">
+                        <label for="to">To</label>
+                        <input type="email" class="form-control" id="to" required value="flavorpal2023@gmail.com" readonly>
+                    </div>                    
                 </form>
             </div>
             <div class="modal-footer">
@@ -227,24 +274,32 @@
 
 
 
+<!-- Script for email -->
 <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
+<script src="https://smtpjs.com/v3/smtp.js"></script>
+
+<!-- BOOTSTRAP -->
 <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+
+<!-- Script for Draggable Modal -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/draggable/1.2.9/draggable.bundle.legacy.min.js"></script>
+
+<!-- Script for pdf download -->
 <script src="https://raw.githack.com/eKoopmans/html2pdf/master/dist/html2pdf.bundle.js"></script>
 <script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.4.0/jspdf.umd.min.js"></script>
 <script src="https://unpkg.com/html2pdf.js"></script>
-<script src="https://smtpjs.com/v3/smtp.js"></script>
+
+
 
 <script src="js/sendEmail.js"></script>
-<!-- <script src="js/timer.js"></script> -->
-<!-- <script src="js/conversion.js"></script> -->
-<script src="js/timer_and_conversion.js"></script>
-<script src="js/index.js"></script>
+<script src="js/timer.js"></script>
+<script src="js/conversion.js"></script>
+<script src="js/substitution.js"></script>
+<!-- <script src="js/timer_and_conversion.js"></script> -->
 <script src="js/dashboard.js"></script>
 <script src="js/download.js"></script>
-<script src="js/session.js"></script>
 <script src="js/draggableModal.js"></script>
 </body>
 </html>

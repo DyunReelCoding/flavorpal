@@ -1,4 +1,5 @@
 // Updated function to download the recipe content as PDF and store user and recipe IDs
+cookingStarted = false;
 function downloadRecipe() {
     const title = document.getElementById("recipeModalLabel").textContent;
     const description = document.getElementById("recipeModalBody").innerHTML;
@@ -35,7 +36,7 @@ function downloadRecipe() {
                                 'Accept': 'application/json',
                             },
                             body: JSON.stringify({
-                                user_id: userId,
+                                user_id:userId,
                                 recipe_id: recipeId,
                             }),
                         })

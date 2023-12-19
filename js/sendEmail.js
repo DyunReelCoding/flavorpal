@@ -7,16 +7,8 @@ function showRateModal() {
         .then(latestIdData => {
             latestUserId = latestIdData.latest_login_id;
 
-            // Fetch the latest recipe ID
-            return fetch('http://backendtest.test/api/latest-recipe-id');
-        })
-        .then(latestRecipeIdResponse => latestRecipeIdResponse.json())
-        .then(latestRecipeIdData => {
-            const latestRecipeId = latestRecipeIdData.latest_recipe_id;
-
-            // Set the latest user ID and recipe ID in the modal
+            // Set the latest user ID in the modal
             document.querySelector("#user_id").value = latestUserId;
-            document.querySelector("#recipe_id").value = latestRecipeId;
 
             // Trigger the modal show using vanilla JavaScript
             var myModal = new bootstrap.Modal(document.getElementById('rateModal'));
@@ -48,11 +40,26 @@ function sendEmail() {
     var recipeId = document.querySelector("#recipe_id").value;
     var score = document.querySelector("#score").value;
 
+     // Check if any of the required fields are empty
+     if (!sendername || !subject || !replyto || !review || !score) {
+        alert("Please fill in all required fields before sending the email.");
+        return;
+    }
+
+    // Check if the email field is empty or does not contain "@"
+    if (!replyto || replyto.indexOf("@") === -1) {
+        alert("Please enter a valid email address.");
+        return;
+    }
+     // Validate the score
+     if (isNaN(score) || score < 1 || score > 10) {
+        alert("Please enter a valid score between 1 and 10.");
+        return;
+    }
 
     // Store common parameters in variables
     const commonParams = {
-        user_id: userId,
-        recipe_id: recipeId,
+        user_id: userId, 
         score: score,
         review: review,
     };
@@ -77,9 +84,11 @@ function sendEmail() {
     .then(res => {
         // Email sent successfully
         alert("Email sent successfully!!");
+        storeRatingData(commonParams);
 
-        // // Now, store rating data
-        // storeRatingData(commonParams);
+        // Reset the form
+        document.querySelector("#contactForm").reset();
+
     })
     .catch(error => {
         // Handle email sending error
@@ -89,7 +98,7 @@ function sendEmail() {
 }
 
 function storeRatingData(params) {
-    var endpoint = 'http://backendtest.test/api/ratings';
+    var endpoint = 'http://backendtest.test/api/rating';
 
     fetch(endpoint, {
         method: 'POST',

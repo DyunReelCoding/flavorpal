@@ -49,4 +49,14 @@ body {
     background-color: rgba(0, 0, 0)
 }
 
+.card-img-top, .card{
+    border-radius: 50px 50px 50px 50px;
+}
 
+.fontSize{
+    font-size: 16px;
+}
+.dropdown-menu {
+    left: 0;
+   
+}
