@@ -37,7 +37,6 @@ function sendEmail() {
     var replyto = document.querySelector("#replyto").value;
     var review = document.querySelector("#review").value;
     var userId = document.querySelector("#user_id").value;
-    var recipeId = document.querySelector("#recipe_id").value;
     var score = document.querySelector("#score").value;
 
      // Check if any of the required fields are empty
@@ -57,45 +56,57 @@ function sendEmail() {
         return;
     }
 
-    // Store common parameters in variables
-    const commonParams = {
-        user_id: userId, 
-        score: score,
-        review: review,
-    };
+    // Fetch the latest recipe ID
+    fetch('http://backendtest.test/api/latest-recipe-id')
+        .then(response => response.json())
+        .then(latestIdData => {
+            var recipeId = latestIdData.latest_recipe_id;
 
-    // Store email-specific parameters in a variable
-    var emailParams = {
-        sendername: sendername,
-        to: to,
-        subject: subject,
-        replyto: replyto,
-        review: review,
-        user_id: userId,
-        recipe_id: recipeId,
-        score: score,
-    };
+            // Store common parameters in variables
+            const commonParams = {
+                user_id: userId,
+                recipe_id: recipeId,
+                score: score,
+                review: review,
+            };
 
-    var serviceID = "service_egdp949"; // Replace with your EmailJS service ID
-    var templateID = "template_694ai8l"; // Replace with your EmailJS template ID
+            // Store email-specific parameters in a variable
+            var emailParams = {
+                sendername: sendername,
+                to: to,
+                subject: subject,
+                replyto: replyto,
+                review: review,
+                user_id: userId,
+                recipe_id: recipeId,
+                score: score,
+            };
 
-    // Send email using EmailJS
-    emailjs.send(serviceID, templateID, emailParams)
-    .then(res => {
-        // Email sent successfully
-        alert("Email sent successfully!!");
-        storeRatingData(commonParams);
+            var serviceID = "service_egdp949"; // Replace with your EmailJS service ID
+            var templateID = "template_694ai8l"; // Replace with your EmailJS template ID
 
-        // Reset the form
-        document.querySelector("#contactForm").reset();
+            // Send email using EmailJS
+            emailjs.send(serviceID, templateID, emailParams)
+                .then(res => {
+                    // Email sent successfully
+                    alert("Email sent successfully!!");
+                    storeRatingData(commonParams);
 
-    })
-    .catch(error => {
-        // Handle email sending error
-        console.error('Error sending email:', error);
-        alert("Failed to send email. Please try again later.");
-    });
+                    // Reset the form
+                    document.querySelector("#contactForm").reset();
+                })
+                .catch(error => {
+                    // Handle email sending error
+                    console.error('Error sending email:', error);
+                    alert("Failed to send email. Please try again later.");
+                });
+        })
+        .catch(error => {
+            console.error('Error fetching latest recipe ID:', error);
+            // Handle the error, show an error message, or perform any other actions
+        });
 }
+
 
 function storeRatingData(params) {
     var endpoint = 'http://backendtest.test/api/rating';

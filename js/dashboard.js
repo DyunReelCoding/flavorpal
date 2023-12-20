@@ -4,65 +4,6 @@ function logout() {
     window.location.replace("index.html");
 }
 
-/*
-// Function to fetch the user's email based on the latest login ID
-async function fetchUserEmail() {
-    try {
-        // Fetch the latest login ID
-        const latestLoginIdResponse = await fetch('http://backendtest.test/api/latest-login-id');
-        const latestLoginIdData = await latestLoginIdResponse.json();
-        const latestLoginId = latestLoginIdData.latest_login_id;
-
-        console.log('Latest Login ID:', latestLoginId);
-
-        if (latestLoginId) {
-            // Fetch user details using the latest login ID
-            const userDetailsResponse = await fetch(`http://backendtest.test/api/login/${latestLoginId}`);
-            const userDetailsData = await userDetailsResponse.json();
-            const userEmail = userDetailsData.data.email; 
-
-            console.log('User Email:', userEmail);
-
-            return userEmail;
-        }
-
-        return null;
-    } catch (error) {
-        console.error('Error fetching user email:', error);
-        return null;
-    }
-}
-
-
-        // Function to update the navbar with the user's email
-        async function updateNavbarWithEmail() {
-            try {
-                // Fetch the user's email
-                const userEmail = await fetchUserEmail();
-
-                if (userEmail) {
-                    // Update the navbar with the user's email
-                    const navbarEmailElement = document.getElementById('navbarEmail');
-                    if (navbarEmailElement) {
-                        navbarEmailElement.textContent = `${userEmail}`;
-                    } else {
-                        console.error('Navbar email element not found.');
-                    }
-                }
-            } catch (error) {
-                console.error('Error updating navbar with email:', error);
-            }
-        }
-
-        // Event listener for the test button
-        document.getElementById('testButton').addEventListener('click', async function () {
-            // Trigger the update of the navbar with the user's email
-            await updateNavbarWithEmail();
-        });
-
-        // Call the function to update the navbar with the user's email
-        updateNavbarWithEmail();
-*/
 // Display welcome message on Home button click
 function displayHome() {
     const welcomeMessage = document.getElementById("welcomeMessage");
