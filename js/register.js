@@ -34,7 +34,7 @@ function register() {
         return;
     }
 
-    fetch('http://backendtest.test/api/register', {
+    fetch('http://flavorpal-project-2.test/api/register', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',

@@ -186,13 +186,14 @@ function displaySearchResult(searchTerm, recipes) {
     });
 }
 
+//fetch recipes from mealdb
 async function fetchCategoryForRecipe(recipeTitle) {
     try {
         const response = await fetch(`https://www.themealdb.com/api/json/v1/1/search.php?s=${recipeTitle}`);
         const data = await response.json();
 
         if (data.meals && data.meals.length > 0) {
-            // Assuming the category is available in the first result
+            
             return data.meals[0].strCategory;
         }
 
@@ -205,6 +206,7 @@ async function fetchCategoryForRecipe(recipeTitle) {
     }
 }
 
+// StartCooking function
 function startCooking() {
     cookingStarted = true;
     const recipeTitle = document.getElementById('recipeModalLabel').innerText;
@@ -214,7 +216,7 @@ function startCooking() {
     let userId;
 
     // Fetch the latest login ID
-    fetch('http://backendtest.test/api/latest-login-id')
+    fetch('http://flavorpal-project-2.test/api/latest-login-id')
         .then(latestLoginIdResponse => {
             if (!latestLoginIdResponse.ok) {
                 throw new Error('Failed to fetch latest login ID');
@@ -225,14 +227,14 @@ function startCooking() {
             userId = latestLoginIdData.latest_login_id;
 
             // Post the recipe with the user ID
-            return fetch('http://backendtest.test/api/recipe', {
+            return fetch('http://flavorpal-project-2.test/api/recipe', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
                     'Accept': 'application/json',
                 },
                 body: JSON.stringify({
-                    user_id: userId, //userId not Working?
+                    user_id: userId, 
                     title: recipeTitle,
                     description: recipeDescription,
                 }),
@@ -248,7 +250,7 @@ function startCooking() {
             recipeId = recipeData.recipe_id;
 
             // Fetch the latest recipe ID
-            return fetch('http://backendtest.test/api/latest-recipe-id');
+            return fetch('http://flavorpal-project-2.test/api/latest-recipe-id');
         })
         .then(latestRecipeIdResponse => {
             if (!latestRecipeIdResponse.ok) {
@@ -277,7 +279,7 @@ function startCooking() {
             };
 
             // Post the nutrition data
-            return fetch('http://backendtest.test/api/nutrition', {
+            return fetch('http://flavorpal-project-2.test/api/nutrition', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -295,7 +297,7 @@ function startCooking() {
         .then(nutritionData => {
             nutritionId = nutritionData.nutrition_id;
 
-            // Optionally, you can update the UI or perform any other actions for nutrition and cooking started
+           
             alert('Cooking started!');
             console.log('Cooking started!');
         })

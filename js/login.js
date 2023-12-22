@@ -10,7 +10,7 @@ async function login() {
     }
 
     try {
-        const response = await fetch("http://backendtest.test/api/login", {
+        const response = await fetch("http://flavorpal-project-2.test/api/login", {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
@@ -34,7 +34,18 @@ async function login() {
             document.getElementById("loginErrorMessage").style.display = "block";
         } else {
             // Fetch latest login ID
-            const latestLoginIdResponse = await fetch('http://backendtest.test/api/latest-login-id');
+            const latestLoginIdResponse = await fetch('http://flavorpal-project-2.test/api/latest-login-id', {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Accept': 'application/json',
+                },
+            });
+            
+            if (!latestLoginIdResponse.ok || latestLoginIdResponse.headers.get('Content-Type') !== 'application/json') {
+                throw new Error('Invalid response received for latest login ID');
+            }
+
             const latestLoginIdData = await latestLoginIdResponse.json();
 
             if (!latestLoginIdResponse.ok) {
@@ -43,17 +54,15 @@ async function login() {
 
             const user_id = latestLoginIdData.latest_login_id;
 
-
-
             // Prompt user for preference
             const userPreference = prompt("What type of recipe do you like? (e.g., meat, soup, vegan)");
 
             // Store user preference
-            const userPreferenceResponse = await fetch('http://backendtest.test/api/user-preference', {
+            const userPreferenceResponse = await fetch('http://flavorpal-project-2.test/api/user-preference', {
                 method: 'POST',
                 headers: {
-                    'Content-Type': 'application/json',
-                    'Accept': 'application/json',
+                    "Content-Type": "application/json",
+                    "Accept": "application/json",
                 },
                 body: JSON.stringify({
                     user_id: user_id,
@@ -86,4 +95,3 @@ async function login() {
         document.getElementById("loginErrorMessage").style.display = "block";
     }
 }
-

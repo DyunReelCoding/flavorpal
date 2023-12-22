@@ -1,8 +1,10 @@
+cookingStarted = false;
 function showRateModal() {
     let latestUserId; // Declare the variable in the outer scope
 
+    if(cookingStarted)
     // Fetch the latest user ID
-    fetch('http://backendtest.test/api/latest-login-id')
+    fetch('http://flavorpal-project-2.test/api/latest-login-id')
         .then(response => response.json())
         .then(latestIdData => {
             latestUserId = latestIdData.latest_login_id;
@@ -18,6 +20,10 @@ function showRateModal() {
             console.error('Error fetching latest IDs:', error);
             // Handle the error, show an error message, or perform any other actions
         });
+        else
+        {
+            alert("Click 'Start Cooking' to begin the cooking process.");
+        }
 }
 
 
@@ -57,7 +63,7 @@ function sendEmail() {
     }
 
     // Fetch the latest recipe ID
-    fetch('http://backendtest.test/api/latest-recipe-id')
+    fetch('http://flavorpal-project-2.test/api/latest-recipe-id')
         .then(response => response.json())
         .then(latestIdData => {
             var recipeId = latestIdData.latest_recipe_id;
@@ -109,7 +115,7 @@ function sendEmail() {
 
 
 function storeRatingData(params) {
-    var endpoint = 'http://backendtest.test/api/rating';
+    var endpoint = 'http://flavorpal-project-2.test/api/rating';
 
     fetch(endpoint, {
         method: 'POST',
